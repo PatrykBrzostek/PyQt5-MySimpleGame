@@ -7,6 +7,7 @@ How to play:
 Move - arrow keys  
 Space - drop bomb  
 You can control another bot, if you click on him.  
+Bots move completely random
 
 Upcoming features:  
 -Live & end game scoreboard  
