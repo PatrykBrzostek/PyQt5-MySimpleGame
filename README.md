@@ -10,7 +10,6 @@ You can control another bot, if you click on him.
 Bots move completely random
 
 Upcoming features:  
--Live & end game scoreboard  
 -TCP/IP connect  
 
 ![Alt text](MyGame.png?raw=true "MyGame")
