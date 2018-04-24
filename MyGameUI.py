@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         lineEdit_height=21
         self.MainWindow.resize(self.shape[1]*self.side+button_width,self.shape[0]*self.side+lineEdit_height)
         self.centralwidget.resize(self.shape[1]*self.side+button_width,self.shape[0]*self.side+lineEdit_height)
-        self.graphicsView.resize(self.shape[1]*self.side,self.shape[0]*self.side)
+        self.graphicsView.resize(self.shape[1]*self.side+button_width,self.shape[0]*self.side)
         self.pushButton_Start.setGeometry(QtCore.QRect(self.shape[1]*self.side, 0, button_width, button_height))
         self.pushButton_End.setGeometry(QtCore.QRect(self.shape[1]*self.side, button_height, button_width, button_height))
         self.pushButton_3.setGeometry(QtCore.QRect(self.shape[1]*self.side, button_height*2, button_width, button_height))
@@ -60,7 +60,7 @@ class Ui_MainWindow(object):
 
         # QGraphicsScene
         self.scene = QtWidgets.QGraphicsScene()
-        self.scene.setSceneRect(QtCore.QRectF(0, 0, self.shape[1]*self.side-self.side,self.shape[0]*self.side-self.side))
+        self.scene.setSceneRect(QtCore.QRectF(+self.side-self.side/4, 0, self.shape[1]*self.side,self.shape[0]*self.side-self.side))
         self.graphicsView.setScene(self.scene)
 
         self.read_images()
@@ -71,3 +71,5 @@ class Ui_MainWindow(object):
         self.img_orange_rect = QtGui.QPixmap('images/orange_rect.png')
         self.img_explosion_rect = QtGui.QPixmap('images/explonsion_rect.png')
         self.img_ticking_bomb_rect = QtGui.QPixmap('images/bomb_rect.png')
+        self.img_player_red= QtGui.QPixmap('images/bomberman_red_front.png')
+        self.img_player_green= QtGui.QPixmap('images/bomberman_green_front.png')
