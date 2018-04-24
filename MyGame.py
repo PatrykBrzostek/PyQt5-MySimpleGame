@@ -1,4 +1,4 @@
-# v 0.2
+# v 0.2.1
 
 import numpy as np
 from PyQt5.QtCore import QTimer
@@ -186,6 +186,34 @@ class Arena(MyGameUI.Ui_MainWindow):
                 rect_item.setPos(rect)
                 rect_item.setScale(self.side / 90)
                 self.scene.addItem(rect_item)
+
+
+        if self.intro_ended==True:
+            self.updateScoreBoard()
+    def updateScoreBoard(self):
+        self.updateSingleText('SCOREBOARD', self.shape[1] * self.side - self.side / 5 * 2, self.side * 3, bold=True)
+        for i, player in enumerate(self.players):
+            if player.type==0:
+                img_score=self.img_player_green
+            else:
+                img_score = self.img_player_red
+            rect_item = QtWidgets.QGraphicsPixmapItem(img_score)
+            rect = QtCore.QPointF(self.shape[1]*self.side -self.side/4, self.side*3.5+i*self.side)
+            rect_item.setPos(rect)
+            rect_item.setScale(self.side / 90)
+            self.scene.addItem(rect_item)
+            self.updateSingleText('HP: ', self.shape[1] * self.side +self.side/5*4, self.side * 3+(self.side/2)+i*self.side,bold=True,size=10)
+            self.updateSingleText(str(player.hp), self.shape[1] * self.side + self.side *1.5,self.side * 3 + (self.side / 2) + i * self.side, bold=True, size=12)
+    def updateSingleText(self, text, x, y, bold=False, size=11):
+        font = QtGui.QFont()
+        font.setPointSize(size)
+        font.setBold(bold)
+        rect = QtCore.QPointF(x,y)
+        text_item = QtWidgets.QGraphicsSimpleTextItem()
+        text_item.setText(text)
+        text_item.setPos(rect)
+        text_item.setFont(font)
+        self.scene.addItem(text_item)
 
     def canBowlBomb(self,player):
         if player.last_direction==1:
@@ -381,34 +409,35 @@ class Arena(MyGameUI.Ui_MainWindow):
         self.doubleClickLog(int((self.pressX+self.side/2)/self.side),int((self.pressY+self.side/2)/self.side))
 
     def doubleClickLog(self, X, Y):
-        decoded_rect=self.arena[Y,X]
-        if decoded_rect==self.rect_empty:
-            log='Pusty blok'
-        elif decoded_rect==self.rect_destructible:
-            log='Zniszczalny blok'
-        elif decoded_rect==self.rect_indestructible:
-            log='Niezniszczalny blok'
-        elif decoded_rect==self.rect_ticking_bomb:
-            log='Bomba'
-        elif decoded_rect >= self.rect_bomb and decoded_rect <= self.rect_bomb + self.max_bots:
-            log='Eksplozja'
-        elif decoded_rect >= self.rect_bot and decoded_rect <= self.rect_bot + self.max_bots and decoded_rect!=self.rect_bot+self.rect_you:
-            self.players[self.your_player_index].type=0
-            self.players[self.your_player_index].read_jpg()
+        if Y<self.shape[0] and X<self.shape[1]:
+            decoded_rect=self.arena[Y,X]
+            if decoded_rect==self.rect_empty:
+                log='Pusty blok'
+            elif decoded_rect==self.rect_destructible:
+                log='Zniszczalny blok'
+            elif decoded_rect==self.rect_indestructible:
+                log='Niezniszczalny blok'
+            elif decoded_rect==self.rect_ticking_bomb:
+                log='Bomba'
+            elif decoded_rect >= self.rect_bomb and decoded_rect <= self.rect_bomb + self.max_bots:
+                log='Eksplozja'
+            elif decoded_rect >= self.rect_bot and decoded_rect <= self.rect_bot + self.max_bots and decoded_rect!=self.rect_bot+self.rect_you:
+                self.players[self.your_player_index].type=0
+                self.players[self.your_player_index].read_jpg()
 
-            self.players[decoded_rect-self.rect_bot].type=1
-            self.players[decoded_rect-self.rect_bot].read_jpg()
-            self.your_player_index=decoded_rect-self.rect_bot
-            self.rect_you=decoded_rect-self.rect_bot
-            #dac to wyzej do nowe funkcji
-            self.update_graphics()
+                self.players[decoded_rect-self.rect_bot].type=1
+                self.players[decoded_rect-self.rect_bot].read_jpg()
+                self.your_player_index=decoded_rect-self.rect_bot
+                self.rect_you=decoded_rect-self.rect_bot
+                #dac to wyzej do nowe funkcji
+                self.update_graphics()
 
-            log='Zmieniłeś gracza'
-        elif decoded_rect == self.rect_you + self.rect_bot:
-            log='Twoj gracz'
-        else:
-            log=''
-        self.lineEdit.setText(log)
+                log='Zmieniłeś gracza'
+            elif decoded_rect == self.rect_you + self.rect_bot:
+                log='Twoj gracz'
+            else:
+                log=''
+            self.lineEdit.setText(log)
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
